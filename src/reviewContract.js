@@ -22,6 +22,7 @@ You must respond in this exact JSON format and nothing else:
   "fishy": [
     {
       "clause": "clause name or section number",
+      "quote": "copy the exact words from the contract that are problematic, keep it short, one sentence max",
       "issue": "plain English explanation of why this is a red flag"
     }
   ],
