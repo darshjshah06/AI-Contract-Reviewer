@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { extractTextFromPDF } from './pdfParser'
 import { reviewContract } from './reviewContract'
+import HighlightedContract from './HighlightedContract'
 
 function getVerdictClass(verdict) {
   if (verdict === 'GREEN LIGHT') return 'green'
@@ -96,6 +97,11 @@ function App() {
               <p>{result.summary}</p>
             </div>
           </div>
+
+          <HighlightedContract
+            text={contractText}
+            fishyItems={result.fishy}
+          />
 
           <div className="section">
             <h3>🚩 Fishy Clauses</h3>
