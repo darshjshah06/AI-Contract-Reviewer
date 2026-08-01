@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { extractTextFromPDF } from './pdfParser'
 import { reviewContract } from './reviewContract'
 import HighlightedContract from './HighlightedContract'
+import ChromeTitle from './ChromeTitle'
 
 function getVerdictClass(verdict) {
   if (verdict === 'GREEN LIGHT') return 'green'
@@ -58,10 +59,10 @@ function App() {
   return (
     <div className="container">
       <div className="header">
-        <h1>AI Contract Reviewer</h1>
+        <ChromeTitle />
         <p>Upload your contract and get an instant verdict</p>
       </div>
-
+      
       <div className="upload-box">
         <input
           type="file"

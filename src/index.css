@@ -5,20 +5,28 @@
 }
 
 body {
-  background-color: #2c1f0e;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='8' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.9 0.7 0.3 0 0.15 0.8 0.6 0.2 0 0.1 0.5 0.3 0.1 0 0.03 0 0 0 0.6 0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply'/%3E%3C/filter%3E%3Crect width='900' height='900' filter='url(%23paper)'/%3E%3Cline x1='120' y1='0' x2='100' y2='900' stroke='rgba(0,0,0,0.25)' stroke-width='2'/%3E%3Cline x1='400' y1='0' x2='420' y2='900' stroke='rgba(0,0,0,0.15)' stroke-width='1.5'/%3E%3Cline x1='700' y1='0' x2='680' y2='900' stroke='rgba(0,0,0,0.2)' stroke-width='1'/%3E%3Cline x1='0' y1='200' x2='900' y2='210' stroke='rgba(0,0,0,0.2)' stroke-width='1.5'/%3E%3Cline x1='0' y1='550' x2='900' y2='540' stroke='rgba(0,0,0,0.15)' stroke-width='1'/%3E%3Cpolygon points='0,0 80,0 60,30 0,20' fill='rgba(0,0,0,0.3)'/%3E%3Cpolygon points='900,0 820,0 840,40 900,25' fill='rgba(0,0,0,0.25)'/%3E%3Cpolygon points='0,900 70,900 50,870 0,880' fill='rgba(0,0,0,0.3)'/%3E%3Cpolygon points='900,900 830,900 850,865 900,875' fill='rgba(0,0,0,0.25)'/%3E%3Cellipse cx='150' cy='300' rx='40' ry='15' fill='rgba(80,40,0,0.15)'/%3E%3Cellipse cx='700' cy='600' rx='30' ry='12' fill='rgba(80,40,0,0.12)'/%3E%3C/svg%3E"),
-    linear-gradient(
-      135deg,
-      #3a2508 0%,
-      #2c1f0e 25%,
-      #1e1508 50%,
-      #2a1c0a 75%,
-      #352208 100%
-    );
+  min-height: 100vh;
   color: #ffffff;
   font-family: 'Inter', sans-serif;
-  min-height: 100vh;
+  position: relative;
+  background-color: #2c1f0e;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'%3E%3Cfilter id='parchment'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.025' numOctaves='10' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1.2 0.9 0.4 0 0.12 1.0 0.75 0.3 0 0.08 0.6 0.4 0.1 0 0.02 0 0 0 1 0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply'/%3E%3C/filter%3E%3Crect width='1000' height='1000' filter='url(%23parchment)'/%3E%3Cline x1='200' y1='0' x2='180' y2='1000' stroke='rgba(0,0,0,0.2)' stroke-width='1.5'/%3E%3Cline x1='500' y1='0' x2='520' y2='1000' stroke='rgba(0,0,0,0.12)' stroke-width='1'/%3E%3Cline x1='800' y1='0' x2='790' y2='1000' stroke='rgba(0,0,0,0.15)' stroke-width='1'/%3E%3Cline x1='0' y1='300' x2='1000' y2='310' stroke='rgba(0,0,0,0.15)' stroke-width='1.5'/%3E%3Cline x1='0' y1='700' x2='1000' y2='690' stroke='rgba(0,0,0,0.1)' stroke-width='1'/%3E%3Cpolygon points='0,0 100,0 70,50 0,30' fill='rgba(0,0,0,0.35)'/%3E%3Cpolygon points='1000,0 900,0 930,50 1000,30' fill='rgba(0,0,0,0.3)'/%3E%3Cpolygon points='0,1000 90,1000 60,960 0,975' fill='rgba(0,0,0,0.35)'/%3E%3Cpolygon points='1000,1000 910,1000 940,955 1000,970' fill='rgba(0,0,0,0.3)'/%3E%3Cellipse cx='150' cy='400' rx='60' ry='20' fill='rgba(60,30,0,0.15)'/%3E%3Cellipse cx='800' cy='200' rx='45' ry='18' fill='rgba(60,30,0,0.12)'/%3E%3Cellipse cx='600' cy='750' rx='50' ry='15' fill='rgba(60,30,0,0.1)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 32px,
+      rgba(80, 50, 10, 0.06) 32px,
+      rgba(80, 50, 10, 0.06) 33px
+    ),
+    linear-gradient(
+      160deg,
+      #3d2a0f 0%,
+      #2c1f0e 30%,
+      #1e1508 60%,
+      #2a1c0a 100%
+    );
+  background-size: cover, auto, cover;
 }
 
 .container {
