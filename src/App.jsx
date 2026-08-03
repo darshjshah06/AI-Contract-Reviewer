@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { extractTextFromPDF } from './pdfParser'
 import { reviewContract } from './reviewContract'
 import HighlightedContract from './HighlightedContract'
-import ChromeTitle from './ChromeTitle'
+import Landing from './Landing'
+import EightBall from './EightBall'
 
 function getVerdictClass(verdict) {
   if (verdict === 'GREEN LIGHT') return 'green'
@@ -16,12 +17,30 @@ function getVerdictIcon(verdict) {
   if (verdict === 'DO NOT SIGN') return '🚨'
 }
 
+function getVerdictText(verdict) {
+  if (verdict === 'GREEN LIGHT') return 'Safe to Sign'
+  if (verdict === 'CAUTION') return 'Proceed with Caution'
+  if (verdict === 'DO NOT SIGN') return 'Do Not Sign'
+  return 'Awaiting Review'
+}
+
 function App() {
+  const [started, setStarted] = useState(false)
+  const [appVisible, setAppVisible] = useState(false)
+  const [ballVisible, setBallVisible] = useState(false)
   const [contractText, setContractText] = useState('')
   const [fileName, setFileName] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  function handleStart() {
+    setStarted(true)
+    setTimeout(() => {
+      setAppVisible(true)
+      setBallVisible(true)
+    }, 400)
+  }
 
   async function handleFileUpload(e) {
     const file = e.target.files[0]
@@ -57,78 +76,96 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <div className="header">
-        <ChromeTitle />
-        <p>Upload your contract and get an instant verdict</p>
-      </div>
-      
-      <div className="upload-box">
-        <input
-          type="file"
-          accept=".pdf,.txt,.doc"
-          onChange={handleFileUpload}
-        />
-        {fileName && <p>✔ Loaded: {fileName}</p>}
-      </div>
+    <>
+      {/* Landing Screen */}
+      {!started && <Landing onStart={handleStart} />}
 
-      <div className="paste-box">
-        <p>Or paste your contract text below</p>
-        <textarea
-          placeholder="Paste contract text here..."
-          rows={10}
-          value={contractText}
-          onChange={handlePasteInput}
-        />
-      </div>
-
-      <button className="review-btn" onClick={handleReview} disabled={loading}>
-        {loading ? 'Reviewing...' : 'Review Contract'}
-      </button>
-
-      {error && <p className="error">{error}</p>}
-
-      {result && (
-        <div className="results">
-
-          <div className={`verdict-card ${getVerdictClass(result.verdict)}`}>
-            <div className="verdict-icon">{getVerdictIcon(result.verdict)}</div>
-            <div className="verdict-text">
-              <h2>{result.verdict}</h2>
-              <p>{result.summary}</p>
-            </div>
-          </div>
-
-          <HighlightedContract
-            text={contractText}
-            fishyItems={result.fishy}
-          />
-
-          <div className="section">
-            <h3>🚩 Fishy Clauses</h3>
-            {result.fishy.map((item, i) => (
-              <div className="fishy-item" key={i}>
-                <strong>{item.clause}</strong>
-                <p>{item.issue}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="section">
-            <h3>✅ Safe Clauses</h3>
-            {result.safe.map((item, i) => (
-              <div className="safe-item" key={i}>{item}</div>
-            ))}
-          </div>
-
-          <div className="recommendation">
-            <h3>💡 Recommendation</h3>
-            <p>{result.recommendation}</p>
-          </div>
-
+      {/* Bottom 8 Ball */}
+      <div className={`eight-ball-bottom ${ballVisible ? 'visible' : ''}`}>
+        <div className="eight-ball-bottom-inner">
+          <p className="eight-ball-verdict">
+            {result ? `${getVerdictIcon(result.verdict)} ${getVerdictText(result.verdict)}` : '8'}
+          </p>
         </div>
-      )}
-    </div>
+      </div>
+
+      {/* Main App */}
+      <div className={`app-wrapper ${appVisible ? 'visible' : ''}`}>
+        <div className="container">
+
+          <div className="header">
+            <h1>AI Contract Reviewer</h1>
+            <p>For Content Creators</p>
+          </div>
+
+          <div className="upload-box">
+            <input
+              type="file"
+              accept=".pdf,.txt,.doc"
+              onChange={handleFileUpload}
+            />
+            {fileName && <p>✔ Loaded: {fileName}</p>}
+          </div>
+
+          <div className="paste-box">
+            <p>Or paste your contract text below</p>
+            <textarea
+              placeholder="Paste contract text here..."
+              rows={10}
+              value={contractText}
+              onChange={handlePasteInput}
+            />
+          </div>
+
+          <button className="review-btn" onClick={handleReview} disabled={loading}>
+            {loading ? 'Reviewing...' : 'Review Contract'}
+          </button>
+
+          {error && <p className="error">{error}</p>}
+
+          {result && (
+            <div className="results">
+
+              <div className={`verdict-card ${getVerdictClass(result.verdict)}`}>
+                <div className="verdict-icon">{getVerdictIcon(result.verdict)}</div>
+                <div className="verdict-text">
+                  <h2>{result.verdict}</h2>
+                  <p>{result.summary}</p>
+                </div>
+              </div>
+
+              <HighlightedContract
+                text={contractText}
+                fishyItems={result.fishy}
+              />
+
+              <div className="section">
+                <h3>🚩 Fishy Clauses</h3>
+                {result.fishy.map((item, i) => (
+                  <div className="fishy-item" key={i}>
+                    <strong>{item.clause}</strong>
+                    <p>{item.issue}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="section">
+                <h3>✅ Safe Clauses</h3>
+                {result.safe.map((item, i) => (
+                  <div className="safe-item" key={i}>{item}</div>
+                ))}
+              </div>
+
+              <div className="recommendation">
+                <h3>💡 Recommendation</h3>
+                <p>{result.recommendation}</p>
+              </div>
+
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   )
 }
 
