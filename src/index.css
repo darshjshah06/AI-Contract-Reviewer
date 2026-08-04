@@ -11,6 +11,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
+
 /* ── LANDING SCREEN ── */
 .landing {
   position: fixed;
@@ -57,62 +58,26 @@ body {
   50% { opacity: 0.8; }
 }
 
-/* ── 8 BALL ROLLING ANIMATION ── */
+/* ── ROLLING BALL ── */
 @keyframes rollDown {
   0% {
-    transform: translateX(-50%) translateY(0px) rotate(0deg);
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) rotate(0deg);
+    width: 380px;
+    height: 380px;
+  }
+  70% {
+    width: 380px;
+    height: 380px;
   }
   100% {
-    transform: translateX(-50%) translateY(calc(100vh - 80px)) rotate(720deg);
+    top: 100%;
+    transform: translateX(-50%) translateY(-140px) rotate(720deg);
+    width: 280px;
+    height: 280px;
   }
 }
 
-/* ── FIXED BOTTOM 8 BALL ── */
-.eight-ball-bottom {
-  position: fixed;
-  bottom: -220px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle at 35% 35%, #444, #000 70%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    0 0 0 5px #111,
-    0 0 40px rgba(0, 0, 0, 0.9);
-  z-index: 50;
-  transition: bottom 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.eight-ball-bottom.visible {
-  bottom: -80px;
-}
-
-.eight-ball-bottom-inner {
-  width: 120px;
-  height: 120px;
-  background: radial-gradient(circle at 40% 40%, #1a1a1a, #000);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #222;
-}
-
-.eight-ball-verdict {
-  color: #ccff00;
-  font-size: 11px;
-  font-weight: 900;
-  text-align: center;
-  text-transform: uppercase;
-  line-height: 1.3;
-  padding: 8px;
-}
-
-/* ── ROLLING BALL ── */
 .rolling-ball {
   position: fixed;
   left: 50%;
@@ -129,7 +94,7 @@ body {
     0 0 0 8px #111,
     0 0 60px rgba(0, 0, 0, 0.9);
   z-index: 200;
-  animation: rollDown 1s cubic-bezier(0.4, 0, 0.8, 1) forwards;
+  animation: rollDown 1s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
 
 .rolling-ball-inner {
@@ -140,13 +105,58 @@ body {
   border: 2px solid #222;
 }
 
+/* ── FIXED BOTTOM 8 BALL ── */
+.eight-ball-bottom {
+  position: fixed;
+  bottom: -280px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle at 35% 35%, #444, #000 70%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 6px #111,
+    0 0 50px rgba(0, 0, 0, 0.9);
+  z-index: 50;
+  transition: bottom 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.eight-ball-bottom.visible {
+  bottom: -100px;
+}
+
+.eight-ball-bottom-inner {
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle at 40% 40%, #1a1a1a, #000);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #222;
+}
+
+.eight-ball-verdict {
+  color: #ccff00;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1.3;
+  padding: 12px;
+}
+
 /* ── MAIN APP ── */
 .app-wrapper {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
   pointer-events: none;
-  padding-bottom: 160px;
+  padding-bottom: 200px;
 }
 
 .app-wrapper.visible {
@@ -161,20 +171,10 @@ body {
   padding: 48px 24px;
 }
 
-/* ── HEADER ── */
-.header {
-  margin-bottom: 40px;
-  text-align: center;
-}
 
-.header h1 {
-  font-size: 3rem;
-  font-weight: 900;
-  color: #ccff00;
-  text-transform: uppercase;
-  letter-spacing: -1px;
-  line-height: 1;
-  margin-bottom: 8px;
+.header {
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 .header p {
@@ -421,4 +421,23 @@ body {
 
 .highlight:hover {
   background-color: rgba(255, 68, 68, 0.45);
+}
+
+/* ── WITCH TEXT ── */
+.witch-text {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 0 24px;
+}
+
+.witch-text p {
+  font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: #ccff00;
+  opacity: 0.65;
+  line-height: 1.9;
+  letter-spacing: 0.5px;
+  max-width: 680px;
+  margin: 0 auto;
 }

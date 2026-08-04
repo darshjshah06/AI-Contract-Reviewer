@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { extractTextFromPDF } from './pdfParser'
 import { reviewContract } from './reviewContract'
 import HighlightedContract from './HighlightedContract'
-import Landing from './Landing'
 import EightBall from './EightBall'
 
 function getVerdictClass(verdict) {
@@ -21,11 +20,11 @@ function getVerdictText(verdict) {
   if (verdict === 'GREEN LIGHT') return 'Safe to Sign'
   if (verdict === 'CAUTION') return 'Proceed with Caution'
   if (verdict === 'DO NOT SIGN') return 'Do Not Sign'
-  return 'Awaiting Review'
+  return '8'
 }
 
 function App() {
-  const [started, setStarted] = useState(false)
+  const [phase, setPhase] = useState('landing')
   const [appVisible, setAppVisible] = useState(false)
   const [ballVisible, setBallVisible] = useState(false)
   const [contractText, setContractText] = useState('')
@@ -35,11 +34,12 @@ function App() {
   const [error, setError] = useState('')
 
   function handleStart() {
-    setStarted(true)
+    setPhase('rolling')
     setTimeout(() => {
+      setPhase('app')
       setAppVisible(true)
       setBallVisible(true)
-    }, 400)
+    }, 1000)
   }
 
   async function handleFileUpload(e) {
@@ -78,24 +78,65 @@ function App() {
   return (
     <>
       {/* Landing Screen */}
-      {!started && <Landing onStart={handleStart} />}
-
-      {/* Bottom 8 Ball */}
-      <div className={`eight-ball-bottom ${ballVisible ? 'visible' : ''}`}>
-        <div className="eight-ball-bottom-inner">
-          <p className="eight-ball-verdict">
-            {result ? `${getVerdictIcon(result.verdict)} ${getVerdictText(result.verdict)}` : '8'}
-          </p>
+      {phase === 'landing' && (
+        <div className="landing" onClick={handleStart}>
+          <div className="eight-ball-intro">
+            <EightBall
+              text="Press anywhere to start reviewing your contract"
+              size="large"
+            />
+            <p className="click-hint">Click anywhere</p>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Rolling Ball Animation */}
+      {phase === 'rolling' && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: '#0d1b3e',
+          zIndex: 200,
+          overflow: 'hidden'
+        }}>
+          <div className="rolling-ball">
+            <div className="rolling-ball-inner" />
+          </div>
+        </div>
+      )}
+
+{/* Bottom 8 Ball */}
+      {phase === 'app' && (
+        <div className={`eight-ball-bottom ${ballVisible ? 'visible' : ''}`}>
+          <div className="eight-ball-bottom-inner">
+            <p className="eight-ball-verdict" id="verdict-text-spinning">
+              {result
+                ? `${result.verdict === 'GREEN LIGHT' ? '✅' : result.verdict === 'CAUTION' ? '⚠️' : '🚨'} ${result.verdict === 'GREEN LIGHT' ? 'Safe to Sign' : result.verdict === 'CAUTION' ? 'Proceed with Caution' : 'Do Not Sign'}`
+                : 'Safe to Sign'
+              }
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Main App */}
       <div className={`app-wrapper ${appVisible ? 'visible' : ''}`}>
         <div className="container">
 
           <div className="header">
-            <h1>AI Contract Reviewer</h1>
-            <p>For Content Creators</p>
+            <img
+              src="/title.png"
+              alt="AI Contract Reviewer"
+              style={{ width: '100%', maxWidth: '800px', display: 'block', margin: '0 auto 12px' }}
+            />
+          </div>
+
+          <div className="witch-text">
+            <p>
+              "Heed this warning, dear creator... brands shall tempt thee with silver tongues and hollow promises. 
+              Before thou signs away thy soul, consult the sacred 8 ball below — 
+              it sees what mortal eyes cannot. Let it be thy shield against trickery and deceit."
+            </p>
           </div>
 
           <div className="upload-box">
@@ -139,22 +180,26 @@ function App() {
                 fishyItems={result.fishy}
               />
 
-              <div className="section">
-                <h3>🚩 Fishy Clauses</h3>
-                {result.fishy.map((item, i) => (
-                  <div className="fishy-item" key={i}>
-                    <strong>{item.clause}</strong>
-                    <p>{item.issue}</p>
-                  </div>
-                ))}
-              </div>
+              {result.fishy && result.fishy.length > 0 && (
+                <div className="section">
+                  <h3>🚩 Fishy Clauses</h3>
+                  {result.fishy.map((item, i) => (
+                    <div className="fishy-item" key={i}>
+                      <strong>{item.clause}</strong>
+                      <p>{item.issue}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-              <div className="section">
-                <h3>✅ Safe Clauses</h3>
-                {result.safe.map((item, i) => (
-                  <div className="safe-item" key={i}>{item}</div>
-                ))}
-              </div>
+              {result.safe && result.safe.length > 0 && (
+                <div className="section">
+                  <h3>✅ Safe Clauses</h3>
+                  {result.safe.map((item, i) => (
+                    <div className="safe-item" key={i}>{item}</div>
+                  ))}
+                </div>
+              )}
 
               <div className="recommendation">
                 <h3>💡 Recommendation</h3>
