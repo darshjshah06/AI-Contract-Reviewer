@@ -1,8 +1,71 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { extractTextFromPDF } from './pdfParser'
 import { reviewContract } from './reviewContract'
 import HighlightedContract from './HighlightedContract'
-import EightBall from './EightBall'
+
+const DECISIONS = ['Safe to Sign', 'Proceed with Caution', 'Do Not Sign']
+
+function BottomBall({ result, ballVisible }) {
+  const [current, setCurrent] = useState(0)
+  const [angle, setAngle] = useState(0)
+  const velocityRef = useRef(1)
+  const directionRef = useRef(1)
+
+  useEffect(() => {
+    if (result) return
+    const decisionTimer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % DECISIONS.length)
+    }, 700)
+    return () => clearInterval(decisionTimer)
+  }, [result])
+
+  useEffect(() => {
+    if (result) return
+    let animFrame
+    function spin() {
+      if (Math.random() < 0.03) directionRef.current *= -1
+      if (Math.random() < 0.05) {
+        velocityRef.current = (Math.random() * 3 + 0.5) * directionRef.current
+      }
+      velocityRef.current *= 0.99
+      if (Math.abs(velocityRef.current) < 0.3) {
+        velocityRef.current = (Math.random() * 2 + 0.5) * directionRef.current
+      }
+      setAngle(prev => prev + velocityRef.current)
+      animFrame = requestAnimationFrame(spin)
+    }
+    animFrame = requestAnimationFrame(spin)
+    return () => cancelAnimationFrame(animFrame)
+  }, [result])
+
+  function getVerdictIcon(v) {
+    if (v === 'GREEN LIGHT') return '✅'
+    if (v === 'CAUTION') return '⚠️'
+    if (v === 'DO NOT SIGN') return '🚨'
+  }
+
+  function getVerdictLabel(v) {
+    if (v === 'GREEN LIGHT') return 'Safe to Sign'
+    if (v === 'CAUTION') return 'Proceed with Caution'
+    if (v === 'DO NOT SIGN') return 'Do Not Sign'
+  }
+
+  return (
+    <div
+      className={`eight-ball-bottom ${ballVisible ? 'visible' : ''}`}
+      style={{ transform: `translateX(-50%) rotate(${angle}deg)` }}
+    >
+      <div className="eight-ball-bottom-inner">
+        <p className="eight-ball-verdict">
+          {result
+            ? `${getVerdictIcon(result.verdict)} ${getVerdictLabel(result.verdict)}`
+            : DECISIONS[current]
+          }
+        </p>
+      </div>
+    </div>
+  )
+}
 
 function getVerdictClass(verdict) {
   if (verdict === 'GREEN LIGHT') return 'green'
@@ -16,13 +79,6 @@ function getVerdictIcon(verdict) {
   if (verdict === 'DO NOT SIGN') return '🚨'
 }
 
-function getVerdictText(verdict) {
-  if (verdict === 'GREEN LIGHT') return 'Safe to Sign'
-  if (verdict === 'CAUTION') return 'Proceed with Caution'
-  if (verdict === 'DO NOT SIGN') return 'Do Not Sign'
-  return '8'
-}
-
 function App() {
   const [phase, setPhase] = useState('landing')
   const [appVisible, setAppVisible] = useState(false)
@@ -32,6 +88,28 @@ function App() {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [ballAngle, setBallAngle] = useState(0)
+  const landingVelocityRef = useRef(1)
+  const landingDirectionRef = useRef(1)
+
+  useEffect(() => {
+    if (phase !== 'landing') return
+    let animFrame
+    function spin() {
+      if (Math.random() < 0.03) landingDirectionRef.current *= -1
+      if (Math.random() < 0.05) {
+        landingVelocityRef.current = (Math.random() * 3 + 0.5) * landingDirectionRef.current
+      }
+      landingVelocityRef.current *= 0.99
+      if (Math.abs(landingVelocityRef.current) < 0.3) {
+        landingVelocityRef.current = (Math.random() * 2 + 0.5) * landingDirectionRef.current
+      }
+      setBallAngle(prev => prev + landingVelocityRef.current)
+      animFrame = requestAnimationFrame(spin)
+    }
+    animFrame = requestAnimationFrame(spin)
+    return () => cancelAnimationFrame(animFrame)
+  }, [phase])
 
   function handleStart() {
     setPhase('rolling')
@@ -70,7 +148,8 @@ function App() {
       const review = await reviewContract(contractText)
       setResult(review)
     } catch (err) {
-      setError('Something went wrong. Please try again.')
+      console.error(err)
+      setError('Something went wrong. Check your API key and try again.')
     }
     setLoading(false)
   }
@@ -81,10 +160,16 @@ function App() {
       {phase === 'landing' && (
         <div className="landing" onClick={handleStart}>
           <div className="eight-ball-intro">
-            <EightBall
-              text="Press anywhere to start reviewing your contract"
-              size="large"
-            />
+            <div
+              className="landing-ball"
+              style={{ transform: `rotate(${ballAngle}deg)` }}
+            >
+              <div className="landing-ball-inner">
+                <p className="landing-ball-text">
+                  Press anywhere to start reviewing your contract
+                </p>
+              </div>
+            </div>
             <p className="click-hint">Click anywhere</p>
           </div>
         </div>
@@ -105,18 +190,9 @@ function App() {
         </div>
       )}
 
-{/* Bottom 8 Ball */}
+      {/* Bottom Spinning 8 Ball */}
       {phase === 'app' && (
-        <div className={`eight-ball-bottom ${ballVisible ? 'visible' : ''}`}>
-          <div className="eight-ball-bottom-inner">
-            <p className="eight-ball-verdict" id="verdict-text-spinning">
-              {result
-                ? `${result.verdict === 'GREEN LIGHT' ? '✅' : result.verdict === 'CAUTION' ? '⚠️' : '🚨'} ${result.verdict === 'GREEN LIGHT' ? 'Safe to Sign' : result.verdict === 'CAUTION' ? 'Proceed with Caution' : 'Do Not Sign'}`
-                : 'Safe to Sign'
-              }
-            </p>
-          </div>
-        </div>
+        <BottomBall result={result} ballVisible={ballVisible} />
       )}
 
       {/* Main App */}
@@ -127,15 +203,15 @@ function App() {
             <img
               src="/title.png"
               alt="AI Contract Reviewer"
-              style={{ width: '100%', maxWidth: '800px', display: 'block', margin: '0 auto 12px' }}
+              style={{ width: '100%', maxWidth: '800px', display: 'block', margin: '0 auto 8px' }}
             />
           </div>
 
           <div className="witch-text">
             <p>
-              "Heed this warning, dear creator... brands shall tempt thee with silver tongues and hollow promises. 
-              Before thou signs away thy soul, consult the sacred 8 ball below — 
-              it sees what mortal eyes cannot. Let it be thy shield against trickery and deceit."
+              "Heed this warning, dear creator... brands shall tempt thee with silver tongues
+              and hollow promises. Before thou signs away thy soul, consult the sacred 8 ball
+              below — it sees what mortal eyes cannot. Let it be thy shield against trickery and deceit."
             </p>
           </div>
 

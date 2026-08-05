@@ -22,15 +22,8 @@ body {
   background-color: #0d1b3e;
   z-index: 100;
   cursor: pointer;
-  transition: opacity 0.6s ease;
 }
 
-.landing.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* ── 8 BALL INTRO ── */
 .eight-ball-intro {
   display: flex;
   flex-direction: column;
@@ -56,6 +49,45 @@ body {
 @keyframes pulse {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.8; }
+}
+
+/* ── LANDING BALL ── */
+.landing-ball {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle at 35% 35%, #555, #111 50%, #000 70%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 8px #111,
+    0 0 60px rgba(0,0,0,0.9),
+    inset 0 -10px 40px rgba(0,0,0,0.8);
+  transition: transform 0.1s linear;
+}
+
+.landing-ball-inner {
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle at 40% 40%, #1a1a1a, #000);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #222;
+  padding: 16px;
+}
+
+.landing-ball-text {
+  color: #ccff00;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ── ROLLING BALL ── */
@@ -87,12 +119,7 @@ body {
   height: 380px;
   background: radial-gradient(circle at 35% 35%, #444, #000 70%);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    0 0 0 8px #111,
-    0 0 60px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 0 8px #111, 0 0 60px rgba(0,0,0,0.9);
   z-index: 200;
   animation: rollDown 1s cubic-bezier(0.4, 0, 0.6, 1) forwards;
 }
@@ -103,6 +130,8 @@ body {
   background: radial-gradient(circle at 40% 40%, #1a1a1a, #000);
   border-radius: 50%;
   border: 2px solid #222;
+  margin: auto;
+  margin-top: 80px;
 }
 
 /* ── FIXED BOTTOM 8 BALL ── */
@@ -118,9 +147,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow:
-    0 0 0 6px #111,
-    0 0 50px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 0 6px #111, 0 0 50px rgba(0,0,0,0.9);
   z-index: 50;
   transition: bottom 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -138,16 +165,17 @@ body {
   align-items: center;
   justify-content: center;
   border: 2px solid #222;
+  padding: 12px;
 }
 
 .eight-ball-verdict {
   color: #ccff00;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
   text-align: center;
   text-transform: uppercase;
-  line-height: 1.3;
-  padding: 12px;
+  line-height: 1.4;
+  font-family: 'Arial Black', sans-serif;
 }
 
 /* ── MAIN APP ── */
@@ -156,7 +184,7 @@ body {
   transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
   pointer-events: none;
-  padding-bottom: 200px;
+  padding-bottom: 220px;
 }
 
 .app-wrapper.visible {
@@ -171,18 +199,31 @@ body {
   padding: 48px 24px;
 }
 
-
+/* ── HEADER ── */
 .header {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+  margin-top: 40px;
   text-align: center;
 }
 
-.header p {
-  color: #ccff00;
-  opacity: 0.6;
+/* ── WITCH TEXT ── */
+.witch-text {
+  text-align: center;
+  margin-bottom: 48px;
+  margin-top: 0;
+  padding: 0 10px;
+}
+
+.witch-text p {
+  font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
+  font-style: italic;
   font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  color: #ccff00;
+  opacity: 0.65;
+  line-height: 1.9;
+  letter-spacing: 0.5px;
+  max-width: 680px;
+  margin: 0 auto;
 }
 
 /* ── UPLOAD BOX ── */
@@ -421,23 +462,4 @@ body {
 
 .highlight:hover {
   background-color: rgba(255, 68, 68, 0.45);
-}
-
-/* ── WITCH TEXT ── */
-.witch-text {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 0 24px;
-}
-
-.witch-text p {
-  font-family: 'Palatino Linotype', 'Palatino', 'Book Antiqua', Georgia, serif;
-  font-style: italic;
-  font-size: 1rem;
-  color: #ccff00;
-  opacity: 0.65;
-  line-height: 1.9;
-  letter-spacing: 0.5px;
-  max-width: 680px;
-  margin: 0 auto;
 }
