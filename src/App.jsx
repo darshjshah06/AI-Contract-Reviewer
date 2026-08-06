@@ -3,7 +3,7 @@ import { extractTextFromPDF } from './pdfParser'
 import { reviewContract } from './reviewContract'
 import HighlightedContract from './HighlightedContract'
 
-const DECISIONS = ['Safe to Sign', 'Proceed with Caution', 'Do Not Sign']
+const DECISIONS = ['✅', '⚠️', '🚨']
 
 function BottomBall({ result, ballVisible }) {
   const [current, setCurrent] = useState(0)
@@ -44,12 +44,6 @@ function BottomBall({ result, ballVisible }) {
     if (v === 'DO NOT SIGN') return '🚨'
   }
 
-  function getVerdictLabel(v) {
-    if (v === 'GREEN LIGHT') return 'Safe to Sign'
-    if (v === 'CAUTION') return 'Proceed with Caution'
-    if (v === 'DO NOT SIGN') return 'Do Not Sign'
-  }
-
   return (
     <div
       className={`eight-ball-bottom ${ballVisible ? 'visible' : ''}`}
@@ -57,10 +51,7 @@ function BottomBall({ result, ballVisible }) {
     >
       <div className="eight-ball-bottom-inner">
         <p className="eight-ball-verdict">
-          {result
-            ? `${getVerdictIcon(result.verdict)} ${getVerdictLabel(result.verdict)}`
-            : DECISIONS[current]
-          }
+          {result ? getVerdictIcon(result.verdict) : DECISIONS[current]}
         </p>
       </div>
     </div>
@@ -88,28 +79,6 @@ function App() {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [ballAngle, setBallAngle] = useState(0)
-  const landingVelocityRef = useRef(1)
-  const landingDirectionRef = useRef(1)
-
-  useEffect(() => {
-    if (phase !== 'landing') return
-    let animFrame
-    function spin() {
-      if (Math.random() < 0.03) landingDirectionRef.current *= -1
-      if (Math.random() < 0.05) {
-        landingVelocityRef.current = (Math.random() * 3 + 0.5) * landingDirectionRef.current
-      }
-      landingVelocityRef.current *= 0.99
-      if (Math.abs(landingVelocityRef.current) < 0.3) {
-        landingVelocityRef.current = (Math.random() * 2 + 0.5) * landingDirectionRef.current
-      }
-      setBallAngle(prev => prev + landingVelocityRef.current)
-      animFrame = requestAnimationFrame(spin)
-    }
-    animFrame = requestAnimationFrame(spin)
-    return () => cancelAnimationFrame(animFrame)
-  }, [phase])
 
   function handleStart() {
     setPhase('rolling')
@@ -156,14 +125,10 @@ function App() {
 
   return (
     <>
-      {/* Landing Screen */}
       {phase === 'landing' && (
         <div className="landing" onClick={handleStart}>
           <div className="eight-ball-intro">
-            <div
-              className="landing-ball"
-              style={{ transform: `rotate(${ballAngle}deg)` }}
-            >
+            <div className="landing-ball">
               <div className="landing-ball-inner">
                 <p className="landing-ball-text">
                   Press anywhere to start reviewing your contract
@@ -175,7 +140,6 @@ function App() {
         </div>
       )}
 
-      {/* Rolling Ball Animation */}
       {phase === 'rolling' && (
         <div style={{
           position: 'fixed',
@@ -190,12 +154,10 @@ function App() {
         </div>
       )}
 
-      {/* Bottom Spinning 8 Ball */}
       {phase === 'app' && (
         <BottomBall result={result} ballVisible={ballVisible} />
       )}
 
-      {/* Main App */}
       <div className={`app-wrapper ${appVisible ? 'visible' : ''}`}>
         <div className="container">
 
@@ -203,7 +165,7 @@ function App() {
             <img
               src="/title.png"
               alt="AI Contract Reviewer"
-              style={{ width: '100%', maxWidth: '800px', display: 'block', margin: '0 auto 8px' }}
+              style={{ width: '100%', maxWidth: '800px', display: 'block', margin: '0 auto' }}
             />
           </div>
 

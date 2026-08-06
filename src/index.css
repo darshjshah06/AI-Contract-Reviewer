@@ -64,7 +64,6 @@ body {
     0 0 0 8px #111,
     0 0 60px rgba(0,0,0,0.9),
     inset 0 -10px 40px rgba(0,0,0,0.8);
-  transition: transform 0.1s linear;
 }
 
 .landing-ball-inner {
@@ -169,13 +168,9 @@ body {
 }
 
 .eight-ball-verdict {
-  color: #ccff00;
-  font-size: 12px;
-  font-weight: 900;
+  font-size: 48px;
   text-align: center;
-  text-transform: uppercase;
-  line-height: 1.4;
-  font-family: 'Arial Black', sans-serif;
+  line-height: 1;
 }
 
 /* ── MAIN APP ── */
@@ -196,22 +191,21 @@ body {
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 0 24px 48px 24px;
 }
 
 /* ── HEADER ── */
 .header {
-  margin-bottom: 8px;
-  margin-top: 40px;
+  margin: 0;
+  padding-top: 40px;
   text-align: center;
 }
 
 /* ── WITCH TEXT ── */
 .witch-text {
   text-align: center;
-  margin-bottom: 48px;
-  margin-top: 0;
-  padding: 0 10px;
+  margin: 0 0 32px 0;
+  padding: 0 24px;
 }
 
 .witch-text p {
